@@ -22,7 +22,8 @@ This line of code should be placed where you want the information to be displaye
 
     <?php echo $info; ?>
 
- Example:
- `<p class="hits"><?php echo $info; ?></p>
+Example:
+ 
+     <p class="hits"><?php echo $info; ?></p>
 
 See the simphp.php file itself for more config options.`
