@@ -88,7 +88,9 @@ if ($_GET['display'] == "true") {
 		if ($monthly) {
 
 			// Check if today is first day of month
-			if (date('j') == 1) {
+			// Also check if prev month log file exists already
+			$prev_name = $monthly_path . '/' . date("n-Y", strtotime("-1 month")) . '.txt';
+			if (date('j') == 1 && !file_exists($prev_name)) {
 				// If it is first day of month,
 				// move previous log file to subdir and create new file
 
@@ -97,28 +99,23 @@ if ($_GET['display'] == "true") {
 					mkdir($monthly_path);
 				}
 
-				// Check if prev month log file exists already
-				$prev_name = $monthly_path . '/' . date("n-Y", strtotime("-1 month")) . '.txt';
-				if (!file_exists($prev_name)) {
-					// If not, copy current log file into subdir
-					copy($log_file, $prev_name);
+				copy($log_file, $prev_name);
 
-					// Write new data based on config
-					if ($type == 0) {
-						// Total hits
-						$toWrite = "1";
-						$info = $beforeTotalText . "1";
-					} else if ($type == 1) {
-						// Unique hits
-						$toWrite = "1;" . $uIP . ",";
-						$info = $beforeUniqueText . "1";
-					} else if ($type == 2) {
-						// Unique and total
-						$toWrite = "1;1;" . $uIP . ",";
-						$info = $beforeTotalText . "1" . $separator . $beforeUniqueText . "1";
-					}
-					write_logfile($toWrite, $info);
+				// Write new data based on config
+				if ($type == 0) {
+					// Total hits
+					$toWrite = "1";
+					$info = $beforeTotalText . "1";
+				} else if ($type == 1) {
+					// Unique hits
+					$toWrite = "1;" . $uIP . ",";
+					$info = $beforeUniqueText . "1";
+				} else if ($type == 2) {
+					// Unique and total
+					$toWrite = "1;1;" . $uIP . ",";
+					$info = $beforeTotalText . "1" . $separator . $beforeUniqueText . "1";
 				}
+				write_logfile($toWrite, $info);
 
 			} else {
 				// Still same month as before, so just increment counters
